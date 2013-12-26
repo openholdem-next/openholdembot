@@ -43,13 +43,13 @@ figs-within-sections
 \use_indices false
 \paperorientation portrait
 \suppress_date false
-\use_refstyle 0
+\use_refstyle 1
 \index Index
 \shortcut idx
 \color #008000
 \end_index
-\secnumdepth -2
-\tocdepth -2
+\secnumdepth 3
+\tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
 \quotes_language english
@@ -65,89 +65,8 @@ figs-within-sections
 
 \begin_body
 
-\begin_layout Section
-Scraping fonts which are glued together
-\end_layout
-
 \begin_layout Standard
-\begin_inset Graphics
-	filename images/scraping_glued_fonts_01.jpg
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Scraping unknown fonts
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename images/scraping_glued_fonts_02.jpg
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Scraping fonts - multiple characters glued together
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename images/scraping_glued_fonts_03.jpg
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Scraping fonts - small individual region for the character 
-\begin_inset Quotes eld
-\end_inset
-
-a
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename images/scraping_glued_fonts_04.jpg
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Scraping fonts - small individual region for the character 
-\begin_inset Quotes eld
-\end_inset
-
-t
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename images/scraping_glued_fonts_05.jpg
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Scraping fonts - final result: all characters recognized
 \end_layout
 
 \end_body
