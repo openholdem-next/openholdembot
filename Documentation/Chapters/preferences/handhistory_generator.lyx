@@ -75,21 +75,23 @@ figs-within-sections
 \begin_body
 
 \begin_layout Section
-OpenHoldem Preferences – 
-\begin_inset Index idx
-status open
-
-\begin_layout Plain Layout
-GUI
-\end_layout
-
-\end_inset
-
-GUI
+OpenHoldem Preferences - Hand History Generator
 \end_layout
 
 \begin_layout Standard
-GUI preferences control how the OpenHoldem GUI operates on startup.
+This preferences tab provides just a single option to enable or disable
+ the handhistory generator.
+ This option is meant to support poker sites that don't store hand histories
+ at your hard drive for session review and PokerTracker support.
+ If enabled the hand histories can be found in the directory 
+\begin_inset Quotes eld
+\end_inset
+
+OpenHoldem/hand_histories/<SESSION_ID>/
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -100,41 +102,20 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename Images/preferences_GUI.JPG
+	filename Images/preferences_handhistory.JPG
 
 \end_inset
 
 
 \end_layout
 
+\begin_layout Plain Layout
+
+\end_layout
+
 \end_inset
 
 
-\end_layout
-
-\begin_layout Itemize
-
-\emph on
-Start minimized: 
-\emph default
-This option will cause OpenHoldem to start in minimzed mode.
- It is especially useful, if you have to start new bots during a session
- and don't want to accept the risk of occluding tables and causing misscrapes.
-\end_layout
-
-\begin_layout Itemize
-
-\emph on
-Disable all runtime MessageBoxes
-\emph default
-: This preference will prevent OpenHoldem from displaying warning and error
- message boxes during runtime (when OpenHoldem is connected to a table).
- This is extraordinarily dangerous and should only be used when you have
- a 100% stable bot that you want to move to a fully automated execution
- model.
- It is strongly advised that you do not check this option until you have
- a very stable and thoroughly tested botting environment.
- Interactive messages on user-interaction are not affected by this option.
 \end_layout
 
 \end_body
