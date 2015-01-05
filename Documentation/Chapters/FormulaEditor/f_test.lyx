@@ -75,23 +75,19 @@ figs-within-sections
 \begin_body
 
 \begin_layout Section
-OpenHoldem Preferences – 
-\begin_inset Index idx
-status open
-
-\begin_layout Plain Layout
-Scraper
-\end_layout
-
-\end_inset
-
-Scraper
+f$test
 \end_layout
 
 \begin_layout Standard
-Scraper preferences control how the OpenHoldem Screen Scraper engine functions.
- At the moment there is only one preference available here.
- See the {Creating a Table Map} section for more information.
+In addition to the debug-tab there is a special function named 
+\emph on
+f$test.
+ 
+\emph default
+While f$debug is meant for a set of multiple expressions f$test is for a
+ single large expression, even up to complete multi-line function text.
+ No equality-sign here.
+ Just enter your code and play around until you are satisfied with the results.
 \end_layout
 
 \begin_layout Standard
@@ -101,41 +97,25 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-\begin_inset Graphics
-	filename Images/preferences_scraper.JPG
-
-\end_inset
-
 
 \end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-
-\emph on
-\begin_inset Index idx
-status open
 
 \begin_layout Plain Layout
-Scrape delay
+\begin_inset Graphics
+	filename images/f_test.JPG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
 
-Scrape Delay
-\emph default
-: This parameter specifies the amount of time (in milliseconds) that the
- OpenHoldem Screen Scraper engine will pause in between subsequent screen
- scrape passes.
- This amount of time does not specify the time from the beginning of scrape
- 1 to the beginning of scrape 2, but rather the amount of delay between
- the end of scrape 1 and the beginning of scrape 2.
- The primary consideration for this parameter is that of CPU consumption,
- and the default of 750ms seems to work well for most people.
+
 \end_layout
 
 \end_body

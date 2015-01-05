@@ -75,23 +75,19 @@ figs-within-sections
 \begin_body
 
 \begin_layout Section
-OpenHoldem Preferences – 
-\begin_inset Index idx
-status open
-
-\begin_layout Plain Layout
-Scraper
-\end_layout
-
-\end_inset
-
-Scraper
+OpenPPL-Mode
 \end_layout
 
 \begin_layout Standard
-Scraper preferences control how the OpenHoldem Screen Scraper engine functions.
- At the moment there is only one preference available here.
- See the {Creating a Table Map} section for more information.
+OpenHoldem will switch the formula editor into OpenPPL mode as soon as the
+ formula contains a 
+\emph on
+non-empty f$preflop
+\emph default
+ function.
+ Then all primary autoplayer-functions will be hidden and a subtree with
+ the four main OpenPPL functions will be shown instead (f$preflop, f$flop,
+ f$turn and f$river).
 \end_layout
 
 \begin_layout Standard
@@ -102,10 +98,14 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename Images/preferences_scraper.JPG
+	filename images/openppl_mode.JPG
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -114,28 +114,45 @@ status open
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
+If your formula-editor is in OH-script mode then just create a new user-defined
+ function, call it 
+\begin_inset Quotes eld
+\end_inset
 
-\emph on
-\begin_inset Index idx
+f$preflop
+\begin_inset Quotes erd
+\end_inset
+
+, start editing it, apply your changes and reopen the editor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Scrape delay
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename images/creating_f_preflop.JPG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
 
-Scrape Delay
-\emph default
-: This parameter specifies the amount of time (in milliseconds) that the
- OpenHoldem Screen Scraper engine will pause in between subsequent screen
- scrape passes.
- This amount of time does not specify the time from the beginning of scrape
- 1 to the beginning of scrape 2, but rather the amount of delay between
- the end of scrape 1 and the beginning of scrape 2.
- The primary consideration for this parameter is that of CPU consumption,
- and the default of 750ms seems to work well for most people.
+
 \end_layout
 
 \end_body

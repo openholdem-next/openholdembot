@@ -75,23 +75,25 @@ figs-within-sections
 \begin_body
 
 \begin_layout Section
-OpenHoldem Preferences – 
-\begin_inset Index idx
-status open
-
-\begin_layout Plain Layout
-Scraper
-\end_layout
-
-\end_inset
-
-Scraper
+Debug-Tab
 \end_layout
 
 \begin_layout Standard
-Scraper preferences control how the OpenHoldem Screen Scraper engine functions.
- At the moment there is only one preference available here.
- See the {Creating a Table Map} section for more information.
+A special 
+\begin_inset Quotes eld
+\end_inset
+
+function
+\begin_inset Quotes erd
+\end_inset
+
+ in the formula-editor is the debug-tab.
+ It supports the evaluation of symbols, functions and mathematical expressions
+ while being connected to a table, be it ManualMode, replay-frames or a
+ life table.
+ Using it is quite simple: one expression per line, each one after an equality-s
+ign.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -102,7 +104,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename Images/preferences_scraper.JPG
+	filename images/debug_tab.JPG
 
 \end_inset
 
@@ -114,28 +116,40 @@ status open
 
 \end_layout
 
-\begin_layout Itemize
-
+\begin_layout Standard
+After you have entered the expressions you are interested in just click
+ 
 \emph on
-\begin_inset Index idx
+Calc
+\emph default
+ or 
+\emph on
+Auto 
+\emph default
+and OpenHoldem will show you the results of all evaluations like in the
+ picture below.
+ The debug-tab is one of the most useful feature for developing and debugging
+ your OpenHoldem formula set.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Scrape delay
+\begin_inset Graphics
+	filename images/debug_tab_auto.JPG
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
 
-Scrape Delay
-\emph default
-: This parameter specifies the amount of time (in milliseconds) that the
- OpenHoldem Screen Scraper engine will pause in between subsequent screen
- scrape passes.
- This amount of time does not specify the time from the beginning of scrape
- 1 to the beginning of scrape 2, but rather the amount of delay between
- the end of scrape 1 and the beginning of scrape 2.
- The primary consideration for this parameter is that of CPU consumption,
- and the default of 750ms seems to work well for most people.
+
 \end_layout
 
 \end_body

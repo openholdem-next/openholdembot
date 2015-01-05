@@ -75,23 +75,11 @@ figs-within-sections
 \begin_body
 
 \begin_layout Section
-OpenHoldem Preferences – 
-\begin_inset Index idx
-status open
-
-\begin_layout Plain Layout
-Scraper
-\end_layout
-
-\end_inset
-
-Scraper
+Formula Editor
 \end_layout
 
 \begin_layout Standard
-Scraper preferences control how the OpenHoldem Screen Scraper engine functions.
- At the moment there is only one preference available here.
- See the {Creating a Table Map} section for more information.
+At the very bottom of the OpenHoldem GUI you will find the statusbar.
 \end_layout
 
 \begin_layout Standard
@@ -102,7 +90,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename Images/preferences_scraper.JPG
+	filename images/statusbar.JPG
 
 \end_inset
 
@@ -112,30 +100,49 @@ status open
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+From left to right, the fields on the Status Bar are:
 \end_layout
 
 \begin_layout Itemize
-
-\emph on
-\begin_inset Index idx
-status open
-
-\begin_layout Plain Layout
-Scrape delay
+Action taken
 \end_layout
 
-\end_inset
+\begin_layout Itemize
+Your hole cards
+\end_layout
 
-Scrape Delay
-\emph default
-: This parameter specifies the amount of time (in milliseconds) that the
- OpenHoldem Screen Scraper engine will pause in between subsequent screen
- scrape passes.
- This amount of time does not specify the time from the beginning of scrape
- 1 to the beginning of scrape 2, but rather the amount of delay between
- the end of scrape 1 and the beginning of scrape 2.
- The primary consideration for this parameter is that of CPU consumption,
- and the default of 750ms seems to work well for most people.
+\begin_layout Itemize
+The board cards
+\end_layout
+
+\begin_layout Itemize
+Your made poker hand
+\end_layout
+
+\begin_layout Itemize
+Handrank of your hole-cards at a level from 1 to 169 where 1 (AA) is best
+ and 169 is worst against the number of opponents you have
+\end_layout
+
+\begin_layout Itemize
+PrWin, PrTie and PrLos (the values mean: winning-percentages * 10)
+\end_layout
+
+\begin_layout Itemize
+Current value of f$number_of_opponents_for_prwin, one of the standard formula
+ functions.
+ This formula is intended to specify the number of opponents used for the
+ prwin-calculations; however this number can be more or less than the number
+ of opponents actually seen on the table at any given time.
+  More information on f$number_of_opponents_for_prwin can be found in the
+ section about Primary Functions and in the section about PrWin.
+\end_layout
+
+\begin_layout Itemize
+Number of iterations done and number of iterations to be done
 \end_layout
 
 \end_body
