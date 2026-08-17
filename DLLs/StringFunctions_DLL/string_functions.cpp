@@ -435,7 +435,7 @@ void RemoveExtraDotsInNumbers(CString *s) {
 }
 
 void RemoveHtmlTagsAndContexts(CString* s) {
-    std::regex tags("<[^>]*>[^>]*<[^>]*>");
+    static const std::regex tags("<[^>]*>[^>]*<[^>]*>");
     std::string remove{};
     *s = std::regex_replace(s->GetString(), tags, remove).c_str();
 }
