@@ -184,7 +184,7 @@ CString CSymbolEngineVariousDataLookup::SymbolsProvided() {
   CString list = "pl_ vs$ msgbox$ log$ "
     "betround currentround previousround "
     "fmax flagbits "
-    "session version islobby ispopup"
+    "session version islobby ispopup "
     "gamesplayed handsplayed handsplayed_headsup ";
   list += RangeOfSymbols("f%i", 0, 19);
   return list;
