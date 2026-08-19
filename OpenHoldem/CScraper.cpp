@@ -1059,8 +1059,13 @@ bool CScraper::IsIdenticalScrape() {
 	// PW_RENDERFULLCONTENT (0x02) forces the window to render a fresh frame
 	// into our bitmap instead.
 	old_bitmap = (HBITMAP)SelectObject(hdcCompatible, _entire_window_cur);
-	if (!PrintWindow(hwndTarget, hdcCompatible, 0x00000002)) {
-		PrintWindow(hwndTarget, hdcCompatible, 0);
+	if (!PrintWindow(hwndTarget, hdcCompatible, 0x00000002)
+		&& !PrintWindow(hwndTarget, hdcCompatible, 0)) {
+		// Both PrintWindow attempts failed: fall back to the classic capture,
+		// which is what OpenHoldem used before and still works on older clients.
+		RECT cr = { 0 };
+		GetClientRect(hwndTarget, &cr);
+		BitBlt(hdcCompatible, 0, 0, cr.right, cr.bottom, hdc, cr.left, cr.top, SRCCOPY);
 	}
 	SelectObject(hdcCompatible, old_bitmap);
 
