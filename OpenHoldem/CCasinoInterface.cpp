@@ -12,8 +12,6 @@
 //******************************************************************************
 
 #include "stdafx.h"
-#include <oleacc.h>
-#include <atlbase.h>
 #include "CCasinoInterface.h"
 
 #include "CEngineContainer.h"
@@ -133,32 +131,11 @@ bool CCasinoInterface::CloseWindow() {
 		return true;
 	}
 
-	// Fallback to TerminateProcess method
-	write_log(Preferences()->debug_autoplayer(), "[CasinoInterface] f$close failed to execute with SendMessage method, fallback to TerminateProcess method.\n");
-
-	DWORD procId;
-	HANDLE hProc;
-
-	if (GetWindowThreadProcessId(p_autoconnector->attached_hwnd(), &procId))
-	{
-
-		if (hProc = OpenProcess(PROCESS_TERMINATE, FALSE, procId))
-		{
-			if (TerminateProcess(hProc, 0)) {
-				write_log(Preferences()->debug_autoplayer(), "[CasinoInterface] f$close successfully executed with TerminateProcess method.\n");
-				CloseHandle(hProc);
-				return true;
-			}
-
-			CloseHandle(hProc);
-		}
-	}
-
 	// Fallback to search the close window region
 	// Hard-coded click to the "X" at the top-right
 	// of the title-bar
 	// ToDo (maybe): make it work for different settings.
-	write_log(Preferences()->debug_autoplayer(), "[CasinoInterface] f$close failed to execute with TerminateProcess method, fallback to search the close window region.\n");
+	write_log(Preferences()->debug_autoplayer(), "[CasinoInterface] f$close failed to execute with SendMessage method, fallback to search the close window region.\n");
 
 	RECT table_size, close_region;
 	// http://msdn.microsoft.com/en-us/library/ms633503.aspx
