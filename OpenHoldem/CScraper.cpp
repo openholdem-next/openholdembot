@@ -77,34 +77,52 @@ CScraper::~CScraper(void) {
 }
 
 bool CScraper::ProcessRegion(RMapCI r_iter) {
-  write_log(Preferences()->debug_scraper(),
-    "[CScraper] ProcessRegion %s (%i, %i, %i, %i)\n",
-    r_iter->first, r_iter->second.left, r_iter->second.top,
-    r_iter->second.right, r_iter->second.bottom);
-  write_log(Preferences()->debug_scraper(),
-    "[CScraper] ProcessRegion color %i radius %i transform %s\n",
-    r_iter->second.color, r_iter->second.radius, r_iter->second.transform);
+	write_log(Preferences()->debug_scraper(),
+		"[CScraper] ProcessRegion %s (%i, %i, %i, %i)\n",
+		r_iter->first, r_iter->second.left, r_iter->second.top,
+		r_iter->second.right, r_iter->second.bottom);
+	write_log(Preferences()->debug_scraper(),
+		"[CScraper] ProcessRegion color %i radius %i transform %s\n",
+		r_iter->second.color, r_iter->second.radius, r_iter->second.transform);
 	__HDC_HEADER
+
+		// Read from the frame captured by IsIdenticalScrape() instead of from the
+		// live window DC, which is stale on hardware-accelerated clients.
+		// As a side effect every region of one scrape now comes from the same
+		// frame, where before each region was read at a slightly different moment.
+		HDC hdcSource = CreateCompatibleDC(hdcScreen);
+	HBITMAP old_source_bmp = (HBITMAP)SelectObject(hdcSource, _entire_window_cur);
+
 	// Get "current" bitmap
-	old_bitmap = (HBITMAP) SelectObject(hdcCompatible, r_iter->second.cur_bmp);
-	BitBlt(hdcCompatible, 0, 0, r_iter->second.right - r_iter->second.left + 1, 
-							    r_iter->second.bottom - r_iter->second.top + 1, 
-								hdc, r_iter->second.left, r_iter->second.top, SRCCOPY);
+	old_bitmap = (HBITMAP)SelectObject(hdcCompatible, r_iter->second.cur_bmp);
+	BitBlt(hdcCompatible, 0, 0, r_iter->second.right - r_iter->second.left + 1,
+		r_iter->second.bottom - r_iter->second.top + 1,
+		hdcSource, r_iter->second.left, r_iter->second.top, SRCCOPY);
 	SelectObject(hdcCompatible, old_bitmap);
+
+	SelectObject(hdcSource, old_source_bmp);
+	DeleteDC(hdcSource);
 
 	// If the bitmaps are different, then continue on
 	if (!BitmapsAreEqual(r_iter->second.last_bmp, r_iter->second.cur_bmp)) {
-    // Copy into "last" bitmap
-		old_bitmap = (HBITMAP) SelectObject(hdcCompatible, r_iter->second.last_bmp);
-		BitBlt(hdcCompatible, 0, 0, r_iter->second.right - r_iter->second.left + 1, 
-									r_iter->second.bottom - r_iter->second.top + 1, 
-									hdc, r_iter->second.left, r_iter->second.top, SRCCOPY);
-		SelectObject(hdcCompatible, old_bitmap);  
+		// Copy into "last" bitmap, from the same captured frame
+		HDC hdcSourceLast = CreateCompatibleDC(hdcScreen);
+		HBITMAP old_source_bmp_last = (HBITMAP)SelectObject(hdcSourceLast, _entire_window_cur);
+
+		old_bitmap = (HBITMAP)SelectObject(hdcCompatible, r_iter->second.last_bmp);
+		BitBlt(hdcCompatible, 0, 0, r_iter->second.right - r_iter->second.left + 1,
+			r_iter->second.bottom - r_iter->second.top + 1,
+			hdcSourceLast, r_iter->second.left, r_iter->second.top, SRCCOPY);
+		SelectObject(hdcCompatible, old_bitmap);
+
+		SelectObject(hdcSourceLast, old_source_bmp_last);
+		DeleteDC(hdcSourceLast);
+
 		__HDC_FOOTER_ATTENTION_HAS_TO_BE_CALLED_ON_EVERY_FUNCTION_EXIT_OTHERWISE_MEMORY_LEAK
-		return true;
+			return true;
 	}
 	__HDC_FOOTER_ATTENTION_HAS_TO_BE_CALLED_ON_EVERY_FUNCTION_EXIT_OTHERWISE_MEMORY_LEAK
-	return false;
+		return false;
 }
 
 bool CScraper::EvaluateRegion(CString name, CString *result) {
@@ -1030,37 +1048,43 @@ bool CScraper::IsExtendedNumberic(CString text) {
 }
 
 bool CScraper::IsIdenticalScrape() {
-  __HDC_HEADER
+	__HDC_HEADER
 
-	// Get bitmap of whole window
-	RECT		cr = {0};
-	GetClientRect(p_autoconnector->attached_hwnd(), &cr);
+	HWND hwndTarget = p_autoconnector->attached_hwnd();
 
-	old_bitmap = (HBITMAP) SelectObject(hdcCompatible, _entire_window_cur);
-	BitBlt(hdcCompatible, 0, 0, cr.right, cr.bottom, hdc, cr.left, cr.top, SRCCOPY);
+	// Capture the entire window into our bitmap.
+	// BitBlt from the window DC returns a stale frame on clients that render
+	// through DirectComposition or hardware acceleration, which is what made
+	// the scraper appear frozen on newer iPoker clients. PrintWindow with
+	// PW_RENDERFULLCONTENT (0x02) forces the window to render a fresh frame
+	// into our bitmap instead.
+	old_bitmap = (HBITMAP)SelectObject(hdcCompatible, _entire_window_cur);
+	if (!PrintWindow(hwndTarget, hdcCompatible, 0x00000002)) {
+		PrintWindow(hwndTarget, hdcCompatible, 0);
+	}
 	SelectObject(hdcCompatible, old_bitmap);
 
-  p_table_state->TableTitle()->UpdateTitle();
-	
+	p_table_state->TableTitle()->UpdateTitle();
+
 	// If the bitmaps are the same, then return now
-	// !! How often does this happen?
-	// !! How costly is the comparison?
-	if (BitmapsAreEqual(_entire_window_last, _entire_window_cur) 
-      && !p_table_state->TableTitle()->TitleChangedSinceLastHeartbeat()) 	{
+	if (BitmapsAreEqual(_entire_window_last, _entire_window_cur)
+		&& !p_table_state->TableTitle()->TitleChangedSinceLastHeartbeat()) {
 		DeleteDC(hdcCompatible);
 		DeleteDC(hdcScreen);
 		ReleaseDC(p_autoconnector->attached_hwnd(), hdc);
 		write_log(Preferences()->debug_scraper(), "[CScraper] IsIdenticalScrape() true\n");
-    __HDC_FOOTER_ATTENTION_HAS_TO_BE_CALLED_ON_EVERY_FUNCTION_EXIT_OTHERWISE_MEMORY_LEAK
-		return true;
+		__HDC_FOOTER_ATTENTION_HAS_TO_BE_CALLED_ON_EVERY_FUNCTION_EXIT_OTHERWISE_MEMORY_LEAK
+			return true;
 	}
 	// Copy into "last" bitmap
-	old_bitmap = (HBITMAP) SelectObject(hdcCompatible, _entire_window_last);
-	BitBlt(hdcCompatible, 0, 0, cr.right-cr.left+1, cr.bottom-cr.top+1, hdc, cr.left, cr.top, SRCCOPY);
-	SelectObject(hdc, old_bitmap);
+	old_bitmap = (HBITMAP)SelectObject(hdcCompatible, _entire_window_last);
+	if (!PrintWindow(hwndTarget, hdcCompatible, 0x00000002)) {
+		PrintWindow(hwndTarget, hdcCompatible, 0);
+	}
+	SelectObject(hdcCompatible, old_bitmap);
 
 	__HDC_FOOTER_ATTENTION_HAS_TO_BE_CALLED_ON_EVERY_FUNCTION_EXIT_OTHERWISE_MEMORY_LEAK
-	write_log(Preferences()->debug_scraper(), "[CScraper] IsIdenticalScrape() false\n");
+		write_log(Preferences()->debug_scraper(), "[CScraper] IsIdenticalScrape() false\n");
 	return false;
 }
 
