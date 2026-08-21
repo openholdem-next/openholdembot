@@ -39,3 +39,7 @@ scintilla/bin
 
 
 _release/
+
+*.aps
+*.ipdb
+*.iobj
