@@ -138,11 +138,14 @@ void CSymbolEngineActiveDealtPlaying::CalculateDealtBits() {
     if (p_table_state->Player(chair_to_consider)->HasAnyCards()) {
       this_player_got_dealt = true;
     }
-	// The dealer is always dealt
-	if (chair_to_consider == DEALER_CHAIR) {
+	// The dealer is always dealt in tournaments.
+	// Not in ring games, where a seated player who is sitting out
+	// keeps the button but gets no cards.
+	if (chair_to_consider == DEALER_CHAIR
+		&& p_engine_container->symbol_engine_istournament()->istournament()) {
 		if (p_table_state->Player(chair_to_consider)->seated()) {
 			write_log(Preferences()->debug_symbolengine(),
-				"[CSymbolEngineActiveDealtPlaying] CalculateDealtBits() chair %i is the dealer, therefore dealt\n",
+				"[CSymbolEngineActiveDealtPlaying] CalculateDealtBits() chair %i is the dealer in a tournament, therefore dealt\n",
 				chair_to_consider);
 			this_player_got_dealt = true;
 		}
