@@ -1,0 +1,81 @@
+# Line endings
+#
+# This repository predates any line-ending policy, so files were committed in
+# whatever the contributor's editor produced. Without this file every clone
+# behaves differently depending on the contributor's core.autocrlf setting,
+# and a one-line change eventually shows up as a whole-file diff.
+#
+# Policy: Git decides for text files and normalises them to LF in the
+# repository. Working copies on Windows still get CRLF, so Visual Studio and
+# Notepad see what they expect.
+#
+# This does NOT rewrite history. Existing commits keep whatever they had; the
+# normalisation applies from here on, as files are touched.
+
+# Let Git detect text files and normalise them
+* text=auto
+
+# Source
+*.c      text
+*.cpp    text
+*.cxx    text
+*.h      text
+*.hpp    text
+*.cs     text
+*.py     text
+
+# Visual Studio project files. These must be CRLF in the working tree or
+# Visual Studio will rewrite them on save, producing noise in every diff.
+*.sln    text eol=crlf
+*.vcxproj        text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.csproj text eol=crlf
+*.props  text eol=crlf
+*.targets text eol=crlf
+
+# Resource files: Visual Studio's resource editor writes CRLF
+*.rc     text eol=crlf
+*.rc2    text eol=crlf
+*.def    text eol=crlf
+
+# Windows scripts break when given LF endings
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+*.ps1    text eol=crlf
+
+# OpenHoldem scripts, tablemaps and documentation
+*.ohf    text
+*.tm     text
+*.txt    text
+*.md     text
+*.ini    text
+*.INI    text
+*.lyx    text
+
+# Web
+*.htm    text
+*.html   text
+*.css    text
+*.js     text
+*.xml    text
+
+# Binary: never touch these
+*.png    binary
+*.jpg    binary
+*.JPG    binary
+*.jpeg   binary
+*.gif    binary
+*.bmp    binary
+*.ico    binary
+*.chm    binary
+*.pdf    binary
+*.zip    binary
+*.exe    binary
+*.dll    binary
+*.lib    binary
+*.aps    binary
+*.pfb    binary
+
+# Generated resource cache: Visual Studio rewrites it constantly and it is
+# not needed to build. Marked binary so it never produces a text diff.
+OpenHoldem/OpenHoldem.aps binary
