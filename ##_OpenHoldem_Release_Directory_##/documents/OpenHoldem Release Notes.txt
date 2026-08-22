@@ -1,4 +1,121 @@
-﻿﻿v﻿14.0.2.0 2021-12-24
+﻿﻿v14.1.0.0 2026-08-22
+====================
+
+The first release of OpenHoldem Next, a maintained community fork of OpenHoldem.
+
+It is version 14.0.2.0 with the pending community work reviewed and merged:
+the fixes from the v15 pre-release branch, the open pull requests, and one patch that
+existed only as a forum post. Existing scripts, tablemaps and user DLLs
+continue to work unchanged, which is why this is 14.x. The build stays 32-bit.
+
+Every change below is credited to whoever wrote it, and the commit history
+carries their original authorship.
+
+
+BUILDING:
+- The solution now builds with current Visual Studio, tested on VS 2026, using
+  the v141 toolset and the Windows 10 SDK. It previously required v140 and the
+  Windows 8.1 SDK, neither of which is offered by current Visual Studio
+  installers, although both can still be obtained separately.
+  Visual Studio 2017 or newer is needed to open the solution.
+  README.md lists the exact components and the traps involved.
+- Nothing in the code depends on the toolset. To build for Windows XP, install
+  the XP support component and retarget to v141_xp: no source change is needed
+  and there are no XP-specific blockers. Official builds are made with v141
+  because the XP toolset is no longer offered in current Visual Studio.
+- Release packaging is reproducible with scripts/make_release.ps1, which needs
+  no AutoIt, 7-zip or HTML Help Workshop. The package it produces matches the
+  14.0.2.0 layout.
+- Removed the orphaned Release - Optimized, Template and profile build
+  configurations. All three still pointed at a toolset that no longer exists,
+  and Release - Optimized was, despite its name, less optimised than Release.
+  Only Debug and Release remain.
+- Removed a dead project reference that produced three errors every time the
+  solution was opened.
+
+
+NEW STUFF:
+- New elapsedstart and gamesplayed symbols added: seconds since an OH instance started,
+  and number of tables this instance has connected to since it started.
+  Both symbols were added for stopping automatic rematch in
+  spin and go play, and both count per instance, not across instances.
+  [Mudr0x]
+- Tablemap text groups raised from 4 to 8, and font groups to 10.
+  [Mudr0x] [SalemMaxInMontreal]
+
+
+BUG FIXES:
+- Scraping no longer freezes on newer iPoker clients. They render through
+  DirectComposition and stop updating the GDI window DC, so the scraper was
+  working from a stale frame. The window is now captured with PrintWindow and
+  every region of a scrape is read from that same captured frame, which also
+  means all regions now come from one moment rather than several.
+  Requires Windows 8.1 or later; falls back to the previous method.
+  [Sir_Spin]
+- Table titles containing HTML formatting are cleaned before parsing, which
+  affects some iPoker clients.
+  [Mudr0x]
+- Dealer recognition now works with uXseated regions. The u region was skipped
+  whenever the p region was missing, and stale data from the previous scrape
+  survived.
+  [SalemMaxInMontreal]
+- Web colour transform read a pixel outside the captured region.
+  [SalemMaxInMontreal]
+- user.dll was queried more than once per turn, which broke DLLs that keep
+  state between calls. Results are now cached within an orbit. Known
+  limitation: the cache is not keyed on symbol name, so a script using more
+  than one dll$ symbol in the same orbit receives the first symbol's value.
+  [Stars83]
+- f$close now asks the window to close before falling back to clicking the X,
+  which fixes casinos with a custom title bar.
+  [Mudr0x]
+- OpenPPL kicker calculation rewritten. HoldEm_MyKicker returned the fifth card
+  of the made hand unconditionally, which is wrong when the best hole card is
+  not part of it, and HoldEm_NumberOfBetterKickers inherited the error. Scripts
+  using either will behave differently, correctly so.
+  [Mudr0x]
+- Gecko: added the missing full-ring preflop positions, and corrected
+  f$wheeldraw, which could misdetect the AKQJ draw.
+  [nolog] [Mudr0x]
+- CallsSinceLastRaise miscounted players going all-in for less than the last
+  raise. Adds the PlayerRaisingOrColdCallingTheLastRaise symbols.
+  [SalemMaxInMontreal]
+- CalculateDealtBits now treats the button seat as dealt in tournaments, and
+  every seated player as dealt on single-table SNGs.
+  [SalemMaxInMontreal]
+- The maximum log size preference had no effect: the check had been commented
+  out, and it pointed at the wrong path anyway.
+  [LudwigOH]
+- OnTimer was declared as UINT in three headers while implemented as UINT_PTR,
+  so the declarations matched no implementation.
+  [rub3r0id]
+- OpenReplayShooter did not build: its root namespace disagreed with every
+  source file in it.
+  [LudwigOH]
+
+
+NOT INCLUDED YET:
+Part of the v15 pre-release work is deliberately left out of this release.
+
+Nothing has been rejected and nothing is lost. In each case the work either
+could not be verified before release, added behaviour that had not been tested
+by anyone using it, or carried a reported problem that was never closed. Each
+one was reviewed rather than skipped, and the reasoning behind every decision
+has been written down, so none of it has to be worked out again.
+
+Left out for now:
+  Auto-OCR
+  Ante guesser
+  Unwanted casino animations scrape
+  Enhanced PrWin (prw1326) at script level
+  Special slider swag support
+  New PokerTracker DLL
+  Project restructure
+
+If you use any of these and can test them, that is exactly what is missing.
+The analysis is written down and the discussion is open.
+
+v﻿14.0.2.0 2021-12-24
 ====================
 
 BUG FIXES:

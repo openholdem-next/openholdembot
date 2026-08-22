@@ -18,46 +18,50 @@ writes them — that has always been how this community works, and nothing here 
 
 ## Why this fork exists
 
-The work on OpenHoldem never stopped — it just stopped landing. Contributions kept arriving through 2025, but
-nothing has been merged into the main branch since December 2021, issues are disabled, and there
-is nobody available to merge anything.
+The work on OpenHoldem never stopped, it just stopped landing. Contributions kept arriving through
+2025, but nothing was merged into the main branch after December 2021, issues were disabled, and
+there was nobody available to merge anything.
 
-This fork exists to give that work a home: review the pending contributions, publish builds that
-anyone can reproduce, and document how the thing actually works. The goal is to keep the project
-going, not to replace what came before.
+This fork exists to give that work a home: review what was pending, publish builds anyone can
+reproduce, and write down how the thing actually works. Everything merged here keeps the name of
+whoever wrote it.
+
+---
+
+## What this is not
+
+Being clear about this up front, because unmet expectations are what wore out everyone involved
+last time.
+
+For now this is a fork that one person maintains and publishes. It is not a project with a roadmap,
+a release schedule or a support desk.
+
+| | |
+|---|---|
+| **Releases** | When there is something worth releasing. No schedule. |
+| **Issues** | Open, and read. No promise of a reply or a fix. |
+| **Roadmap** | None. Things get done when someone does them. |
+| **User support** | The community forum, not here. |
+| **Scope** | Windows desktop poker clients, Windows 7 or later, 32-bit. |
+| **Outside that scope** | Patches welcome, but unsupported and untested. |
+
+Nothing here obliges anyone to anything. That is deliberate: it is the only version of this that
+is sustainable.
+
+---
 
 ## Status
 
-**In development. No release yet.**
+**Current release: 14.1.0** — see [release notes](##_OpenHoldem_Release_Directory_##/documents/OpenHoldem%20Release%20Notes.txt).
 
-The first release will be **14.1.0**, continuing upstream version numbering. That is deliberate:
-the major version tracks compatibility, so `14.x` tells you your existing scripts, table maps and
-user DLLs still work. A future `15.0.0` will be the release that breaks that promise, and it will
-say so.
+Version numbering continues upstream, and the major version tracks compatibility: `14.x` means
+your existing scripts, table maps and user DLLs still work. A future `15.0.0` will be the release
+that breaks that, and it will say so.
 
 - ✅ Builds cleanly from a fresh clone on current Visual Studio
-- ✅ Repository history preserved in full (5,300+ commits, all original authorship)
-- ⏳ Pending pull requests being reviewed and integrated
-- ⏳ Release packaging not yet reproducible
-
-### Windows XP and Visual Studio 2015
-
-Official builds now target **Windows 7 or later**, and the solution requires **Visual Studio 2017
-or newer** to open.
-
-Upstream targeted Windows XP through the `v140_xp` toolset, which needs Visual Studio 2015 and the
-Windows 8.1 SDK. Neither installs on a current Visual Studio, and the XP toolset is no longer
-offered — so continuing to require it meant requiring a development environment that is currently difficult to set up.
-
-Nothing in the code depends on this: building with an XP-capable toolset is still possible if you
-have one. If you need that configuration and can help maintain it, open an issue.
-
-Builds remain **32-bit (Win32) only**, as they always have been: user DLLs must match the host
-process bitness, so going 64-bit would invalidate every compiled `user.dll` at once. That belongs
-in a major release with a migration guide.
-
-**Scripts, table maps and user DLLs are unaffected** — this is a build-environment change, which
-is why the release is still `14.x`.
+- ✅ Repository history preserved in full, with original authorship intact
+- ✅ Reproducible release packaging
+- ⏳ Part of the v15 pre-release work still pending review — see below
 
 ---
 
@@ -67,7 +71,7 @@ Requires **Visual Studio 2017 or newer**. Tested on VS 2026 (18.9).
 
 **Components** — Visual Studio Installer → Individual components:
 
-- `Desktop development with C++`
+- `Desktop development with C++` (workload)
 - `MSVC v141 - VS 2017 C++ x64/x86 build tools`
 - `C++ MFC for v141 build tools (x86 & x64)`
 - `C++ ATL for v141 build tools (x86 & x64)`
@@ -84,23 +88,53 @@ Requires **Visual Studio 2017 or newer**. Tested on VS 2026 (18.9).
 **Things that will waste your time otherwise**
 
 - **Don't take the toolset Visual Studio suggests** (`v145` or newer). This is MultiByte MFC code
-  from another era; five compiler generations in one step will not survive. That migration is
-  planned as its own release.
+  from another era; five compiler generations in one step will not survive. Moving to a current
+  toolset is planned as its own release.
 - The Windows SDK field needs the **complete** version string (`10.0.22621.0`), not `10.0`.
   Otherwise all projects fail at once with MSB8036, which looks far worse than it is.
-- `Release - Optimized`, `Template` and `profile` are orphaned configurations that exist in only
-  some projects and still point at `v140_xp`. Use `Release`. Despite the name,
-  `Release - Optimized` is *less* optimised than `Release`.
 - `ManualMode-XMLRPC` and `SymbolDumperUserDll` are deselected for this configuration upstream;
   skipping them is expected.
-- Binaries land in `Release\`, except `poker-eval.lib` (`pokereval\Release\`) and `SciLexer.lib`
-  (`scintilla\bin\`).
+- Binaries land in `Release\`, except `poker-eval.lib` (`pokereval\Release\`), `SciLexer.lib`
+  (`scintilla\bin\`) and `OpenReplayShooter.exe`, which the C# project writes to its own `bin\`.
 
-**A compiled build is not a distribution.** The bot expects the OpenPPL library and supporting
-folders next to the executable; without them it starts and reports missing initialisation
-functions. Reproducible packaging is in progress.
+**Building for Windows XP**
+
+Nothing in the code depends on the toolset. Install the XP support component, retarget to
+`v141_xp`, and it builds: no source change, no XP-specific blockers. Official builds use `v141`
+only because current Visual Studio installers no longer offer the XP toolset.
+
+### Packaging a release
+
+```
+.\scripts\make_release.ps1
+```
+
+Assembles the distributable from the release skeleton, the build output and the OpenPPL library,
+then produces the zip. Needs no AutoIt, 7-zip or HTML Help Workshop, which the previous process
+did. It reads the version from the built executable and warns if `stdafx.h` disagrees.
+
+A compiled build on its own is not a distribution: the bot expects the OpenPPL library and the
+supporting folders next to the executable, or it starts and reports missing initialisation
+functions.
 
 ---
+
+## What is actually useful here
+
+Not code. What this fork is short of is **people who use a thing and can say whether it works**.
+
+Part of the v15 pre-release work is not merged yet — Auto-OCR, the ante guesser, the unwanted
+animations filter, enhanced PrWin at script level, special slider swag support, the new
+PokerTracker DLL, the project restructure. None of it was rejected. In each case it could not be
+verified before release, or it added behaviour nobody had tested in play, or it carried a reported
+problem that was never closed.
+
+Each of those was reviewed rather than skipped, and the reasoning is kept: what the change does,
+what the concern is, and what would settle it. Ask and you get the full answer. If you use one of
+them, testing it is worth more than any patch.
+
+The same goes for fixes that only exist as forum posts. One of them is in this release. There are
+probably more.
 
 ## Contributing
 
@@ -111,16 +145,17 @@ of how it ended up here.
 - **Questions about compiling or installing:** Discussions → Build & Install help
 - **Strategy, scripts and bot logic:** those belong on the community forum, not here
 
-Pull requests are welcome. Existing upstream pull requests are being cherry-picked with their
-original authorship intact — if you wrote one, your commits will still carry your name.
+Pull requests are welcome. Small and self-contained gets merged; large and unverifiable waits for
+someone who can verify it. Upstream pull requests are cherry-picked with their original authorship
+intact — if you wrote one, your commits still carry your name.
 
 ## Credits
 
-OpenHoldem is the work of many people over many years, most of whom never met. The commit
-history in this repository is complete and unmodified in that respect: every contribution still
-carries its author.
+OpenHoldem is the work of many people over many years, most of whom never met. The commit history
+in this repository is complete and unmodified in that respect: every contribution still carries
+its author.
 
-Particular thanks to the contributors whose pending work this fork exists to publish.
+This release merges work by Mudr0x, SalemMaxInMontreal, Stars83, nolog, rub3r0id and Sir_Spin.
 
 ## License
 
