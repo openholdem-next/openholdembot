@@ -296,11 +296,19 @@ void draw_cur_frame()
 		width = bmp.bmWidth;
 		height = bmp.bmHeight;
 
-		// Resize window
-		SetWindowPos(g_hWnd, NULL, 0, 0, 
-					 width + GetSystemMetrics(SM_CXDLGFRAME)*2, 
-					 height + GetSystemMetrics(SM_CYDLGFRAME)*2 + GetSystemMetrics(SM_CYSIZE) + 1, 
-					 SWP_NOMOVE | SWP_NOZORDER);
+		// Resize window so that the client area matches the bitmap exactly.
+		// The old code added up frame metrics by hand, which produced a client
+		// area of the wrong size as soon as those metrics changed: a bitmap of
+		// 800x585 ended up in a 790x575 client, and the autoconnector then
+		// refused the window because it no longer matched the tablemap.
+		RECT window_rect = { 0, 0, width, height };
+		AdjustWindowRect(&window_rect,
+			GetWindowLong(g_hWnd, GWL_STYLE),
+			FALSE);
+		SetWindowPos(g_hWnd, NULL, 0, 0,
+			window_rect.right - window_rect.left,
+			window_rect.bottom - window_rect.top,
+			SWP_NOMOVE | SWP_NOZORDER);
 
 		// Select file bitmap into a DC
 		hdc = GetDC(g_hWnd);
