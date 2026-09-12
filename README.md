@@ -52,7 +52,7 @@ is sustainable.
 
 ## Status
 
-**Current release: 14.1.0** — see [release notes](%23%23_OpenHoldem_Release_Directory_%23%23/documents/OpenHoldem%20Release%20Notes.txt)
+**Current release: 14.1.1** — see [release notes](%23%23_OpenHoldem_Release_Directory_%23%23/documents/OpenHoldem%20Release%20Notes.txt)
 
 Version numbering continues upstream, and the major version tracks compatibility: `14.x` means
 your existing scripts, table maps and user DLLs still work. A future `15.0.0` will be the release
