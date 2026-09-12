@@ -1047,27 +1047,36 @@ bool CScraper::IsExtendedNumberic(CString text) {
   return false;
 }
 
+// Captures the client area of a window into the given bitmap.
+//
+// BitBlt from the window DC returns a stale frame on clients that render
+// through DirectComposition or hardware acceleration, which is what made the
+// scraper appear frozen on newer iPoker clients. PrintWindow asks the window
+// to render a fresh frame into our bitmap instead: PW_RENDERFULLCONTENT (0x02)
+// includes composed content, and PW_CLIENTONLY (0x01) keeps the origin at the
+// client area, which is what every tablemap is calibrated against.
+//
+// If both attempts fail we fall back to the classic BitBlt, which is what
+// OpenHoldem used until 14.1.0 and still works on ordinary GDI windows.
+void CScraper::CaptureWindowInto(HWND window, HDC memory_dc, HDC window_dc,
+	HBITMAP destination) {
+	HBITMAP previous_bitmap = (HBITMAP)SelectObject(memory_dc, destination);
+	if (!PrintWindow(window, memory_dc, 0x00000003)
+		&& !PrintWindow(window, memory_dc, 0x00000001)) {
+		RECT client_rect = { 0 };
+		GetClientRect(window, &client_rect);
+		BitBlt(memory_dc, 0, 0, client_rect.right, client_rect.bottom,
+			window_dc, client_rect.left, client_rect.top, SRCCOPY);
+	}
+	SelectObject(memory_dc, previous_bitmap);
+}
+
 bool CScraper::IsIdenticalScrape() {
 	__HDC_HEADER
 
 	HWND hwndTarget = p_autoconnector->attached_hwnd();
 
-	// Capture the entire window into our bitmap.
-	// BitBlt from the window DC returns a stale frame on clients that render
-	// through DirectComposition or hardware acceleration, which is what made
-	// the scraper appear frozen on newer iPoker clients. PrintWindow with
-	// PW_RENDERFULLCONTENT (0x02) forces the window to render a fresh frame
-	// into our bitmap instead.
-	old_bitmap = (HBITMAP)SelectObject(hdcCompatible, _entire_window_cur);
-	if (!PrintWindow(hwndTarget, hdcCompatible, 0x00000003)
-		&& !PrintWindow(hwndTarget, hdcCompatible, 0x00000001)) {
-		// Both PrintWindow attempts failed: fall back to the classic capture,
-		// which is what OpenHoldem used before and still works on older clients.
-		RECT cr = { 0 };
-		GetClientRect(hwndTarget, &cr);
-		BitBlt(hdcCompatible, 0, 0, cr.right, cr.bottom, hdc, cr.left, cr.top, SRCCOPY);
-	}
-	SelectObject(hdcCompatible, old_bitmap);
+	CaptureWindowInto(hwndTarget, hdcCompatible, hdc, _entire_window_cur);
 
 	p_table_state->TableTitle()->UpdateTitle();
 
@@ -1082,11 +1091,7 @@ bool CScraper::IsIdenticalScrape() {
 			return true;
 	}
 	// Copy into "last" bitmap
-	old_bitmap = (HBITMAP)SelectObject(hdcCompatible, _entire_window_last);
-	if (!PrintWindow(hwndTarget, hdcCompatible, 0x00000003)) {
-		PrintWindow(hwndTarget, hdcCompatible, 0x00000001);
-	}
-	SelectObject(hdcCompatible, old_bitmap);
+	CaptureWindowInto(hwndTarget, hdcCompatible, hdc, _entire_window_last);
 
 	__HDC_FOOTER_ATTENTION_HAS_TO_BE_CALLED_ON_EVERY_FUNCTION_EXIT_OTHERWISE_MEMORY_LEAK
 		write_log(Preferences()->debug_scraper(), "[CScraper] IsIdenticalScrape() false\n");

@@ -78,6 +78,9 @@ class CScraper : public CSpaceOptimizedGlobalObject {
 	void ScrapeLimits();
 	const double DoChipScrape(RMapCI r_iter);
  private:
+	void CaptureWindowInto(HWND window, HDC memory_dc, HDC window_dc,
+		HBITMAP destination);
+ private:
 	bool ProcessRegion(RMapCI r_iter);
 	bool IsExtendedNumberic(CString text);
  private:
