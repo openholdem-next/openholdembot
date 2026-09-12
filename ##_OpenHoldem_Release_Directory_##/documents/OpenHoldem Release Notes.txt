@@ -1,4 +1,32 @@
-﻿﻿v14.1.0.0 2026-08-22
+﻿﻿v14.1.1.0 2026-08-28
+====================
+
+Two capture bugs introduced in 14.1.0.
+
+
+BUG FIXES:
+- The scraper captured the whole window instead of the client area, so on any
+  window with a standard Windows frame every region was offset downwards by the
+  height of the title bar, and the title bar itself was baked into saved replay
+  frames. Casino clients that draw their own frame were unaffected, which is why
+  this showed up in Manual Mode and in replayed frames rather than in play.
+  Capture now uses PW_CLIENTONLY.
+- OHReplay sized its window by adding frame metrics to the bitmap size by hand,
+  which after the toolset change produced a client area 10 pixels smaller in each
+  dimension. The autoconnector compares the client size against the tablemap, so
+  it would not attach at all. The size is now computed with AdjustWindowRect.
+
+Replay frames recorded with 14.1.0 from a window with a standard frame have the
+title bar in the image and the content shifted down. Record them again with this
+version; a tablemap that was adjusted to compensate will need adjusting back.
+
+
+KNOWN ISSUE:
+Capturing with PrintWindow asks the window to repaint, which is visible as
+flicker on ordinary GDI windows such as Manual Mode and OHReplay. Casino clients
+are not affected. A preference to choose the capture method is planned.
+
+v14.1.0.0 2026-08-22
 ====================
 
 The first release of OpenHoldem Next, a maintained community fork of OpenHoldem.
