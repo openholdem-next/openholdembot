@@ -1,4 +1,18 @@
-﻿v14.1.1.0 2026-09-12
+﻿v14.2.0.0 2026-10-11
+====================
+
+NEW STUFF:
+- New preference under Preferences, Scrape: capture method. PrintWindow, the
+  default, is required for clients that render through DirectComposition,
+  iPoker among them. It asks the window to repaint, which is visible as flicker
+  on ordinary GDI windows such as Manual Mode and OHReplay, so Classic (BitBlt)
+  is there for calibrating tablemaps without it. Classic does not work on
+  accelerated clients: if the scraper freezes after selecting it, that is why.
+  The flicker reported in 14.1.1 is addressed by this setting rather than
+  removed, because a stale frame and an unchanged table look identical and the
+  two cases cannot be told apart automatically.
+  
+v14.1.1.0 2026-09-12
 ====================
 
 Two capture bugs introduced in 14.1.0.
