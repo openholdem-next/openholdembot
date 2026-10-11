@@ -19,6 +19,8 @@
 #include "SAPrefsSubDlg.h"
 #include "DialogSAPrefs4.h"
 
+#include "CScraper.h"
+
 #include "..\DLLs\WindowFunctions_DLL\window_functions.h"
 
 // CDlgSAPrefs4 dialog
@@ -39,6 +41,7 @@ void CDlgSAPrefs4::DoDataExchange(CDataExchange* pDX)
 	CSAPrefsSubDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_SCRAPEDELAY, m_ScrapeDelay);
 	DDX_Control(pDX, IDC_SCRAPEDELAY_SPIN, m_ScrapeDelay_Spin);
+	DDX_Control(pDX, IDC_CAPTURE_METHOD, m_CaptureMethod);
 }
 
 BEGIN_MESSAGE_MAP(CDlgSAPrefs4, CSAPrefsSubDlg)
@@ -58,6 +61,16 @@ BOOL CDlgSAPrefs4::OnInitDialog()
 	m_ScrapeDelay_Spin.SetPos(Preferences()->scrape_delay());
 	m_ScrapeDelay_Spin.SetBuddy(&m_ScrapeDelay);
 
+	// The order of these entries has to match the k_capture_method constants
+	m_CaptureMethod.AddString("Classic (BitBlt)");
+	m_CaptureMethod.AddString("PrintWindow");
+	int capture_method = Preferences()->scrape_capture_method();
+	if (capture_method < k_capture_method_bitblt
+		|| capture_method > k_capture_method_printwindow) {
+		capture_method = k_capture_method_printwindow;
+	}
+	m_CaptureMethod.SetCurSel(capture_method);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -72,6 +85,7 @@ void CDlgSAPrefs4::OnOK()
 		return;
 	}
 	Preferences()->SetValue(k_prefs_scrape_delay, strtoul(text.GetString(), 0, 10));
+	Preferences()->SetValue(k_prefs_scrape_capture_method, m_CaptureMethod.GetCurSel());
 
 	CSAPrefsSubDlg::OnOK();
 }

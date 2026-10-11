@@ -22,6 +22,10 @@
 
 
 
+// Values for the scrape_capture_method preference
+const int k_capture_method_bitblt = 0;
+const int k_capture_method_printwindow = 1;
+
 class CScraper : public CSpaceOptimizedGlobalObject {
   friend class CLazyScraper;
   friend class CAutoConnector;

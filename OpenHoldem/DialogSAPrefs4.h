@@ -38,6 +38,7 @@ protected:
 public:
 	CEdit m_ScrapeDelay;
 	CSpinButtonCtrl m_ScrapeDelay_Spin;
+	CComboBox m_CaptureMethod;
 	virtual BOOL OnInitDialog();
 
 protected:

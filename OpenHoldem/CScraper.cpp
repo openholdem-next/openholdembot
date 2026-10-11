@@ -1061,8 +1061,12 @@ bool CScraper::IsExtendedNumberic(CString text) {
 void CScraper::CaptureWindowInto(HWND window, HDC memory_dc, HDC window_dc,
 	HBITMAP destination) {
 	HBITMAP previous_bitmap = (HBITMAP)SelectObject(memory_dc, destination);
-	if (!PrintWindow(window, memory_dc, 0x00000003)
-		&& !PrintWindow(window, memory_dc, 0x00000001)) {
+	bool captured = false;
+	if (Preferences()->scrape_capture_method() == k_capture_method_printwindow) {
+		captured = PrintWindow(window, memory_dc, 0x00000003)
+			|| PrintWindow(window, memory_dc, 0x00000001);
+	}
+	if (!captured) {
 		RECT client_rect = { 0 };
 		GetClientRect(window, &client_rect);
 		BitBlt(memory_dc, 0, 0, client_rect.right, client_rect.bottom,

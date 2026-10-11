@@ -400,6 +400,9 @@ BEGIN
     LTEXT           "Scrape delay (100-5000 ms)",IDC_STATIC,4,12,90,8
     EDITTEXT        IDC_SCRAPEDELAY,120,10,69,12,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "",IDC_SCRAPEDELAY_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ARROWKEYS | UDS_NOTHOUSANDS,189,10,11,12
+    LTEXT           "Capture method",IDC_STATIC,4,34,90,8
+    COMBOBOX        IDC_CAPTURE_METHOD,120,32,80,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "PrintWindow is needed for clients that render with hardware acceleration. It asks the window to repaint, which makes ordinary windows such as Manual Mode and OHReplay flicker.",IDC_STATIC,4,54,250,32
 END
 
 IDD_SAPREFS6 DIALOGEX 0, 0, 219, 155

@@ -147,6 +147,7 @@ enum {
   k_prefs_table_positioner_options,
   k_prefs_scraper_zoom,
   k_prefs_popup_blocker,
+  k_prefs_scrape_capture_method,
   // Double values
   // Only on double left, just to check for outdated ICM-config
   k_prefs_icm_prize1,
@@ -314,6 +315,8 @@ public:
   const int scraper_zoom() { return prefs_numerical_values[k_prefs_scraper_zoom]; }
   // Popup blocker
   const int popup_blocker() { return prefs_numerical_values[k_prefs_popup_blocker]; }
+  // Capture method: 0 = classic BitBlt, 1 = PrintWindow
+  const int scrape_capture_method() { return prefs_numerical_values[k_prefs_scrape_capture_method]; }
   // Obscure
   LPCSTR window_class_name() { return NonEmptyStringValueElseDefault(k_prefs_window_class_name); }
   LPCSTR mutex_name() { return NonEmptyStringValueElseDefault(k_prefs_mutex_name); }

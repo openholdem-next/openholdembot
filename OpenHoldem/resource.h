@@ -549,6 +549,7 @@
 #define ID_EDIT_VIEWLOG                 32997
 #define ID_EDIT_TAGLOG                  32998
 #define ID_EDIT_CLEARLOG                32999
+#define IDC_CAPTURE_METHOD              1427
 
 // Next default values for new objects
 // 
@@ -556,7 +557,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        189
 #define _APS_NEXT_COMMAND_VALUE         33000
-#define _APS_NEXT_CONTROL_VALUE         1427
+#define _APS_NEXT_CONTROL_VALUE         1428
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
